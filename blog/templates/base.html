@@ -1,0 +1,36 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}"/>
+    <script src="{% static 'js/jquery-3.2.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+</head>
+<body>
+    <nav class="navbar navbar-default" style="">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">MyStack</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="/">Home</a></li>
+          {% if user.is_authenticated %}
+            <li><a href="{% url 'post_new' %}"><span class="glyphicon glyphicon-plus"></span> Yeni Post</a></li>
+              <li><a href="{% url 'profil' %}">Hosgeldiniz, <b>{{ user.username }}</b></a>
+</li>
+              <li><a href="{% url 'logout' %}"> Cikis Yap</a> </li>
+            {% else %}
+              <li>    <a href="{% url 'login' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span> Giris</a>
+</li><li>    <a href="{% url 'signup' %}" class="top-menu"><span class="glyphicon glyphicon-lock"></span> Kayit Ol</a>
+</li>
+          {% endif %}
+
+        </ul>
+      </div>
+    </nav>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

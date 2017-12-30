@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% for post in posts %}
+
+        <div class="container">
+            <div class="row">
+                <h3 style="font-family: Dosis"><a href="{% url 'post_detail' pk=post.pk %}">{{ post.baslik }}</a></h3>
+                <p>{{ post.yazi|linebreaks }}</p>
+                <p style="border-bottom:1px solid lightgray;">Yazar : <b>{{ post.yazar.username }}</b> - Published : <b>{{ post.yayinlanma_tarihi }}</b> Comment : <b>{{ post.comments.count }}</b></p>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}

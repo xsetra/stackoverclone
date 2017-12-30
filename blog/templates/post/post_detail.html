@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+    {% if user.is_authenticated and user.id == post.yazar.id %}
+    <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
+        <a class="btn btn-default" href="{% url 'post_remove' pk=post.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+        {% endif %}
+        <br>
+            <div class="row">
+                <h3 style="font-family: Dosis">{{ post.baslik }}</h3>
+                <p>{{ post.yazi|linebreaks }}</p>
+                <p style="border-bottom:1px solid lightgray;">Yazar : <b>{{ post.yazar.username }}</b> - Published : <b>{{ post.yayinlanma_tarihi }}</b></p>
+            </div>
+    <div class="row">
+        <h3 style="border-bottom: 1px solid lightgray">Comments {{ post.comments.count }} <a class="btn btn-default" href="{% url 'add_comment_to_post' pk=post.pk %}">Add comment</a></h3>
+            {% for comment in post.comments.all %}
+                <div class="comment">
+                    <strong>{{ comment.author }} </strong>sunu yazdi
+                    <p>{{ comment.text|linebreaks }}</p> <div class="date">{{ comment.created_date }}</div>
+                <hr width="250" align="left"/>
+                </div>
+
+            {% empty %}
+                <p>No comments here yet :(</p>
+            {% endfor %}
+    </div>
+        </div>
+{% endblock %}
