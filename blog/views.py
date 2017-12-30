@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from .models import Post, Comment
-from .forms import PostForm, CommentForm
+from .forms import PostForm, CommentForm, CommentOfCommentForm
 from django.utils import timezone
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse
@@ -19,6 +19,23 @@ def profile_api(request):
         resp["Content-Type"] = "application/json"
         resp["Access-Control-Allow-Origin"] = "*"
     return resp
+
+@login_required
+def add_reply(request, pk, c_id):
+    post = get_object_or_404(Post, pk=pk)
+    if request.method == "POST":
+        form = CommentOfCommentForm(request.POST)
+        if form.is_valid():
+            parent_comment = Comment.objects.get(id=c_id)
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.parent_comment = parent_comment
+            comment.save()
+            return redirect('post_detail', pk=post.pk)
+    else:
+        form = CommentOfCommentForm()
+    return render(request, 'post/add_reply.html', {'form': form})
 
 
 # Create your views here.
@@ -45,6 +62,7 @@ def post_list(request):
 
 def post_detail(request, pk):
     post = get_object_or_404(Post, pk=pk)
+    print(post)
     return render(request, 'post/post_detail.html', {'post': post})
 
 

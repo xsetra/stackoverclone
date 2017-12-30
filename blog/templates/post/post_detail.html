@@ -18,8 +18,14 @@
                 <div class="comment">
                     <strong>{{ comment.author }} </strong>sunu yazdi
                     <p>{{ comment.text|linebreaks }}</p> <div class="date">{{ comment.created_date }}</div>
+                    <a href="{% url 'add_reply' c_id=comment.id pk=post.pk %}">Yanitla</a>
                 <hr width="250" align="left"/>
                 </div>
+                <ul>
+                    {% for cc in comment.parent_comment.all %}
+                        <li><b>{{ cc.author }}</b> sunu yazdi : {{ cc.text }}</li>
+                        {% endfor %}
+                </ul>
 
             {% empty %}
                 <p>No comments here yet :(</p>

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% csrf_token %}
 
 {% block content %}
     <div class="container">
@@ -26,20 +27,19 @@
     </div>
     <script type="text/javascript">
         $(document).ready(function(){
-
+        $.ajaxSetup({data: {
+            csrfmiddlewaretoken: '{{ csrf_token }}'
+          }});
         $.ajax({
-            url: "http://localhost:7000/api/profile",
-            type: "GET",
-            crossDomain: true,
-            dataType: "json",
-            success : function (response) {
-                var resp = JSON.parse(response);
-                alert(resp.status)
-            },
-            error: function (xhr, status) {
-                alert("Error")
+            url: "/api/profile/",
+            method: "POST",
+            data:
+            {
+                a: 'something',
+                b: 'something else',
+                _token: $('meta[name="csrf-token"]').attr('content')
             }
-        })
+        });
 
     });
     </script>

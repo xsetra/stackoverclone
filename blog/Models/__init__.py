@@ -24,3 +24,10 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text
+
+
+class CommentOfComment(models.Model):
+    parent_comment = models.ForeignKey('blog.Comment', related_name='parent_comment', on_delete=models.CASCADE)
+    author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    text = models.TextField()
+    created_date = models.DateTimeField(default=timezone.now)
