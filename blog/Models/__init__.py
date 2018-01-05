@@ -15,6 +15,12 @@ class Post(models.Model):
     def __str__(self):
         return self.baslik
 
+    def as_dict(self):
+        return {
+            "yazar" : self.yazar.username,
+            "baslik": self.baslik,
+        }
+
 
 class Comment(models.Model):
     post = models.ForeignKey('blog.Post', related_name='comments', on_delete=models.CASCADE)

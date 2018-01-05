@@ -1,12 +1,22 @@
 {% extends "base.html" %}
 
 {% block content %}
+
     <div class="container">
-    <h1>Yanit Ekle</h1>
-    <form method="POST" class="post-form">{% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">Send</button>
+
+    <div style="margin-top: 10px;">
+        <div class="mx-auto" style="width: 900px; text-align: left">
+            <div class="card bg-light mb-3" style="width: 900px;">
+                <div class="card-header"><b>Add Reply</b></div>
+                <div class="card-body">
+                    <form method="POST" class="post-form">{% csrf_token %}
+                {{ form.as_p }}
+                     <button type="submit" class="save btn btn-success btn-lg">Send</button>
     </form>
+                </div>
+            </div>
+        </div>
+    </div>
         </div>
 
 {% endblock %}

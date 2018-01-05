@@ -1,35 +1,54 @@
+
+
 {% extends 'base.html' %}
 
 {% block content %}
     <div class="container">
-    {% if user.is_authenticated and user.id == post.yazar.id %}
-    <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
-        <a class="btn btn-default" href="{% url 'post_remove' pk=post.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
-        {% endif %}
         <br>
             <div class="row">
-                <h3 style="font-family: Dosis">{{ post.baslik }}</h3>
-                <p>{{ post.yazi|linebreaks }}</p>
-                <p style="border-bottom:1px solid lightgray;">Yazar : <b>{{ post.yazar.username }}</b> - Published : <b>{{ post.yayinlanma_tarihi }}</b></p>
-            </div>
-    <div class="row">
-        <h3 style="border-bottom: 1px solid lightgray">Comments {{ post.comments.count }} <a class="btn btn-default" href="{% url 'add_comment_to_post' pk=post.pk %}">Add comment</a></h3>
-            {% for comment in post.comments.all %}
-                <div class="comment">
-                    <strong>{{ comment.author }} </strong>sunu yazdi
-                    <p>{{ comment.text|linebreaks }}</p> <div class="date">{{ comment.created_date }}</div>
-                    <a href="{% url 'add_reply' c_id=comment.id pk=post.pk %}">Yanitla</a>
-                <hr width="250" align="left"/>
+                <div class="col-md-8" style="margin: 0 auto;text-align:left;">
+                    <div style="margin-bottom: 5px;text-align: right">
+                        <a class="btn btn-success" href="{% url 'add_comment_to_post' pk=post.pk %}"><i class="fas fa-plus-circle"></i> Add comment</a>
+                    </div>
+                  <div class="card border-dark mb-3" style="max-width: 50rem;">
+                      <div class="card-header bg-transparent border-dark"><a>{{ post.baslik }}</a></div>
+                      <div class="card-body text-dark">
+                        <p class="card-text">{{ post.yazi|linebreaks }}</p>
+                      </div>
+                      <div class="card-footer bg-transparent border-dark"><i class="fas fa-user"></i> <b>{{ post.yazar.username }}</b> | <i class="fas fa-calendar-alt"></i> <b>{{ post.yayinlanma_tarihi }}</b> | <i class="fas fa-comment-alt"></i> <b>{{ post.comments.count }}</b>
+                          <div>{% if user.is_authenticated and user.id == post.yazar.id %}
+
+
+                          <div><a href="{% url 'post_edit' pk=post.pk %}"><i class="fas fa-edit"></i>Edit</a>
+                        <a href="{% url 'post_remove' pk=post.pk %}" style="color: #c0392b"><i class="fas fa-trash-alt"></i> Delete</a>
+                          {% endif %}</div></div></div>
+                  </div>
                 </div>
-                <ul>
+            </div>
+    </div>
+    <div class="container">
+    <div class="row">
+        <div class="col-md-8" style="margin: 0 auto;text-align:left;">
+        <h3 style="border-bottom: 1px solid lightgray">Comments {{ post.comments.count }} </h3>
+            {% for comment in post.comments.all %}
+                <div class="card border-success mb-3" style="max-width: 50rem;">
+              <div class="card-header"><i class="fas fa-reply"></i> <strong>{{ comment.author }} </strong> answered <div class="date">{{ comment.created_date }} <a style="float: right;display: inline-block" href="{% url 'add_reply' c_id=comment.id pk=post.pk %}"><i class="fas fa-reply"></i> Reply</a></div> </div>
+              <div class="card-body text-success">
+                <p class="card-text"><p>{{ comment.text|linebreaks }}</p>
+                      <ul>
                     {% for cc in comment.parent_comment.all %}
-                        <li><b>{{ cc.author }}</b> sunu yazdi : {{ cc.text }}</li>
+                        <li type="none"><i class="fas fa-share"></i> <b>{{ cc.author }}</b> sunu yazdi : {{ cc.text }}</li>
                         {% endfor %}
-                </ul>
+                    </ul>
+              </div>
+            </div>
 
             {% empty %}
                 <p>No comments here yet :(</p>
             {% endfor %}
-    </div>
         </div>
+
+
+    </div>
+    </div>
 {% endblock %}

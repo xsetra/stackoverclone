@@ -1,24 +1,41 @@
+
+
+
 {% extends 'base.html' %}
-{% csrf_token %}
 
 {% block content %}
     <div class="container">
-        <h2>PROFIL</h2>
-            YOUR POSTS
-            {% for post in posts %}
-                <div class="row">
-                    <h3 style="font-family: Dosis"><a href="{% url 'post_detail' pk=post.pk %}">{{ post.baslik }}</a></h3>
-                    <p style="border-bottom:1px solid lightgray;">Published : <b>{{ post.yayinlanma_tarihi }}</b> Comment : <b>{{ post.comments.count }}</b></p>
+        <h2>PROFIL</h2><button id="clickme" class="btn btn-warning">Click For API</button>
+
+    <div class="row" style="margin-top: 10px;">
+        <div class="col-12 col-md-12">
+            <div class="row">
+                <div class="col-md-6">
+                <h5>Your Posts</h5>
+                    {% for post in posts %}
+                    <div class="card border-danger mb-3" style="max-width: 31rem;">
+                      <div class="card-header"><a href="{% url 'post_detail' pk=post.pk %}">{{ post.baslik }}</a></div>
+                      <div class="card-body text-danger">
+                        <p class="card-title">Published : {{ post.yayinlanma_tarihi }} | Comment : {{ post.comments.count }}</p>
+                      </div>
+                    </div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
-            COMMENTED POSTS
-            {% for post in commented_posts %}
-                <div class="row">
-                    <h3 style="font-family: Dosis"><a href="{% url 'post_detail' pk=post.pk %}">{{ post.baslik }}</a></h3>
-                    <p style="border-bottom:1px solid lightgray;">Published : <b>{{ post.yayinlanma_tarihi }}</b> Comment : <b>{{ post.comments.count }}</b></p>
+            <div class="col-md-6">
+                <h5>Commented Posts</h5>
+                    {% for post in commented_posts %}
+                    <div class="card border-success mb-3" style="max-width: 31rem;">
+                      <div class="card-header"><a href="{% url 'post_detail' pk=post.pk %}">{{ post.baslik }}</a></div>
+                      <div class="card-body text-success">
+                        <p class="card-title">Published : {{ post.yayinlanma_tarihi }} | Comment : {{ post.comments.count }}</p>
+                      </div>
+                    </div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
-    <button id="clickme">Click For API</button>
+            </div>
+        </div>
+    </div>
+
 
     <div id="api_content">
 
@@ -27,20 +44,33 @@
     </div>
     <script type="text/javascript">
         $(document).ready(function(){
-        $.ajaxSetup({data: {
-            csrfmiddlewaretoken: '{{ csrf_token }}'
-          }});
-        $.ajax({
-            url: "/api/profile/",
-            method: "POST",
-            data:
-            {
-                a: 'something',
-                b: 'something else',
-                _token: $('meta[name="csrf-token"]').attr('content')
-            }
-        });
+            $("#clickme").click(function () {
+                $.ajaxSetup({data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                  }});
+                $.ajax({
+                    url: "http://localhost:8000/api/profile/",
+                    method: "POST",
+                    data:
+                    {
+                        username: '{{ request.user }}',
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (r) {
+                        new_resp = JSON.parse(r)
+                        console.log(new_resp)
+                        $.each(new_resp, function (i) {
+                            $.each(new_resp[i], function (key, value) {
+                                console.log(key + " " + value)
+                            })
+                        })
+                    },
+                    error: function (r) {
+                        console.log(r.data +"hata");
+                    }
+                });
 
+            })
     });
     </script>
 {% endblock %}

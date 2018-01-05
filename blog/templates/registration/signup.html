@@ -1,10 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Sign up</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign up</button>
-  </form>
+    <div class="container">
+    <div style="margin-top: 10px;">
+        <div class="mx-auto" style="width: 900px; text-align: left">
+            <div class="card bg-light mb-3" style="width: 900px;">
+                <div class="card-header"><b>Signup to StackOverClone</b></div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-warning btn-lg">Sign up</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

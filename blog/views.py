@@ -6,19 +6,22 @@ from .forms import PostForm, CommentForm, CommentOfCommentForm
 from django.utils import timezone
 from django.contrib.auth.forms import UserCreationForm
 from django.http import HttpResponse
+import json
 
 
 def profile_api(request):
-    resp = HttpResponse()
     if request.method != 'POST':
+        resp = HttpResponse("Method not allowed")
         resp.status_code = 405
-        resp.content = "Method not allowed"
+        return resp
     else:
-        print(request.body)
-        resp.content = "AAA"
-        resp["Content-Type"] = "application/json"
-        resp["Access-Control-Allow-Origin"] = "*"
-    return resp
+        body = str(request.body)
+        username = body.split("=")[2][:-1]
+        posts = Post.objects.filter(yazar__username=username)
+        l = [p.as_dict() for p in posts]
+        response_text = json.dumps(l)
+        resp = HttpResponse(response_text)
+        return resp
 
 @login_required
 def add_reply(request, pk, c_id):
